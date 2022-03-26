@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name = "description" content="This website is a personal blog that sharing about skills and experience for a data analyst.">
+    <meta name = "keywords" content = "Python">
+    <meta name = "keywords" content = "MySQL">
+    <meta name = "keywords" content = "Data Analyst">
+    <meta name = "keywords" content = "Data Analyst Project">
+    <title>Project1</title>
+    <link rel="stylesheet" href="style/reflection.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"
+    />
+    <link rel="shortcut icon" href="icon/favicon.ico ">
+    <link
+      href="https://fonts.googleapis.com/css?family=Rock+Salt"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <script
+      src="https://kit.fontawesome.com/eda78dd8b6.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+ 
+
+    <div id="main">
+      <div>
+        <p>
+          Set up the font size of text here <br />
+          Current font size: <span id="fontsize"></span>
+        </p>
+      </div>
+
+      <button type="button" class="textAdjust" value="small">Small</button>
+      <button type="button" class="textAdjust" value="mid">Middle</button>
+      <button type="button" class="textAdjust" value="large">Large</button>
+
+      <h2>Python Text Mining Writeup and Reflection</h2>
+
+      <h3>Project Overview</h3>
+      <p>The purpose of this project is to analyze the content of the software engineering developer internship Online assessment posted on Reddit. Those contexts are from the 'csMajors' field and based on which specific companies the user is looking for. The data source was provided by the praw library and the analyst tools were based on nltk the fuzzz packages. Two techniques I used to analyze are text similarity and sentiment analysis. </p>
+      
+      <h3>Implementation</h3>
+      <p>By using the search function, this project can locate the specific company’s OA posted on Reddit. However, it is annoying after you collect a bunch of text from Reddit since it includes too much unnecessary information that will distribute the analysis process. Therefore, I use the stopwords package to remove the stopwords in the content I collected. When I was separating the text into words, I used the word_tokenize function in nltk package since it can find the words and punctuation in a string. <p>
+        Also, when I was calculating the sentiment score, I did not compute the whole text since it is from 100 different posts. What I did is calculate the sentiment score of each post and calculate the total average, which is more accurate. </p>   
+      </p>
+
+      <h3>
+        Result
+      </h3>
+      <p>
+        Here is an example of using this project. After typing in “amazon” as input, the program will first return the top 10 most frequent words in the content. However, it just provides a basic view of the overall text. The dictionary points out an average number of negative, neutral, and positive sentiments based on calculations of nltk.SentimentIntensityAnalyzer. 
+      </p>
+      <p>
+        The last line is the result of text similarity. It will calculate the similarity between each post. If the similarity score is less than 75%, the program will count it as irrelevant. If 75% of the score is irrelevant, the program will return “At least 75 percentage contents are not similar”. The user can based on the most frequent word to see what Reddit users talk most in each post for the internship and the sentiment score can reflect the level of OA of each company. 
+      </p>
+      <img src="images/result.PNG" alt="result" id = "img">
+
+      <h3>
+        Reflection
+      </h3>
+      <p>
+        In this project, what I learn most is how to read the documents and set up the configuration by myself. It takes me a lot of time to do the configuration. The best way is to follow the steps on the document. It is really helpful. In my project, the data source mining and analysis process went well but I realize I can improve more in the analyzing part. I was planning to do the text clustering but it takes me a lot of time to understand the model. I wish I can start earlier to learn more about the modeling of clustering. Even though I did have experience on using python to do k-means clustering before, I still have no idea about how to deal with text clustering. This could be a goal for me if I can do this project again. 
+      </p>
+    </div>
+
+ 
+    <div class="footer-basic">
+      <footer>
+        <div class="social">
+          <a href="https://www.instagram.com/jasonwang0241/"
+            ><i class="icon ion-social-instagram"></i></a
+          ><a href="https://github.com/JasonWYZE"
+            ><ion-icon name="logo-github"></ion-icon></a
+          ><a href="#"><i class="icon ion-social-twitter"></i></a
+          ><a href="#"><i class="icon ion-social-facebook"></i></a>
+        <p class="copyright">Jason Wang e © 2021</p>
+        <img src="icon/favicon.ico" alt="icon" id="iconze"/>
+      </footer>
+    </div>
+
+
+    
+    <script>
+      let text = document.getElementsByClassName("textAdjust");
+      let size = document.getElementById("fontsize");
+
+      function textAdjust(arg) {
+        let text = document.getElementById("main");
+        console.log(arg);
+        if (arg == "small") {
+          text.style.fontSize = "small";
+          size.innerHTML = "small";
+        } else if (arg == "mid") {
+          text.style.fontSize = "medium";
+          size.innerHTML = "medium";
+        } else {
+          text.style.fontSize = "large";
+          size.innerHTML = "large";
+        }
+      }
+
+      for (let i = 0; i < text.length; i++) {
+        text[i].addEventListener("click", function () {
+          textAdjust(text[i].value);
+        });
+      }
+    </script>
+  </body>
+</html>

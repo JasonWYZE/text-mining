@@ -69,8 +69,22 @@
 # # pprint.pprint(vars(submission))
 
 
+from turtle import pos
 import praw
+import string
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('vader_lexicon')
+from thefuzz import fuzz
+import numpy as np
+from sklearn.manifold import MDS
+import matplotlib.pyplot as plt
+
+
+
+
 
 reddit = praw.Reddit(
     client_id="8kehSoJC7UFPVRcF3XaYKw",
@@ -81,11 +95,81 @@ reddit = praw.Reddit(
 )
 sub = 'csMajors'
 submissions = reddit.subreddit(sub)
-keyword = input("Which companies are you looking for?")
+keyword = input("Which companies are you looking for? >>>>>>>")
 
-d = {}
+
 index = 0
-for i in submissions.search(f"{keyword} OA", limit=1):
-    score = SentimentIntensityAnalyzer().polarity_scores(str(i.selftext))
+text = ""
+for i in submissions.search(f"{keyword} OA", limit=100):
+    text += i.selftext
 
-print(score)
+
+text = text.lower()
+
+stopwords = nltk.corpus.stopwords.words("english")
+word_list =  nltk.word_tokenize(text)
+word_list = [w for w in word_list if w.lower() not in stopwords]
+word_list = [w for w in word_list if w.lower() not in string.punctuation]
+word_list = [w for w in word_list if w.lower()!="i"]
+word_list = [w for w in word_list if w.lower()!="oa"]
+
+for i in word_list:
+    if(not i.isalpha() or i.isnumeric()  or i == keyword ):
+        word_list.remove(i)
+
+
+fd = nltk.FreqDist(word_list)
+fd.tabulate(10)
+
+easy_level = fd["easy"] # frequency of the word "easy" 
+hard_level = fd["hard"]  # frequency of the word "hard"
+
+
+def averagDict(d):
+#This function will calculate average of a list of dict 
+    average_dict = {}
+    neg_sum = 0
+    neu_sum = 0
+    pos_sum = 0
+    for i in d:
+        neg_sum += i['neg']
+        neu_sum += i['neu']
+        pos_sum += i['pos']
+
+    average_dict['neg'] = round(neg_sum/len(d),4)   # average negative 
+    average_dict['neu'] = round(neu_sum/len(d),4)   # average neutral
+    average_dict['pos'] = round(pos_sum/len(d),4)   # average positive
+
+    return average_dict
+
+sentiment_score = []
+for i in submissions.search(f"{keyword} OA", limit=100):
+    score = SentimentIntensityAnalyzer().polarity_scores(i.selftext)
+    sentiment_score.append(score)
+
+
+print(averagDict(sentiment_score))
+
+
+string_text = []
+#Text similarity 
+for i in submissions.search(f"{keyword} OA", limit=100):
+    string_text.append(i.selftext)
+
+similarity_ratio = []
+for i in range(0,len(string_text)-1):
+    for j in range(i+1,len(string_text)):
+        similarity_ratio.append(fuzz.ratio(string_text[i],string_text[j]))
+
+def similarity(l):
+    count = 0
+    for i in l:
+        if(i < 75):
+            count+=1
+    if count > 0.75*len(l):
+        return ("At least 75 percentage contexts are not similar")
+    return "At least 75 percentage contexts are similar"
+
+print(similarity(similarity_ratio))
+
+
