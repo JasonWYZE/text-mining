@@ -70,6 +70,8 @@
 
 
 import praw
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
 reddit = praw.Reddit(
     client_id="8kehSoJC7UFPVRcF3XaYKw",
     client_secret="OIe6E4qiuKONKrtXsOlcNX9rrq4BRA",
@@ -81,6 +83,9 @@ sub = 'csMajors'
 submissions = reddit.subreddit(sub)
 keyword = input("Which companies are you looking for?")
 
+d = {}
+index = 0
 for i in submissions.search(f"{keyword} OA", limit=1):
-    print(i.title)
-    print(i.selftext)
+    score = SentimentIntensityAnalyzer().polarity_scores(str(i.selftext))
+
+print(score)
